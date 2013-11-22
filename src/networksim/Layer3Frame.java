@@ -1,6 +1,6 @@
 package networksim;
 
-public class Layer3Frame  implements FrameInterface{
+public class Layer3Frame implements FrameInterface {
 
     @Override
     public byte[] toByteArray() {
