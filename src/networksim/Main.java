@@ -7,9 +7,13 @@ public class Main {
     }
     
     public static void main(String[] args) {
+<<<<<<< HEAD
         Host hostA = new Host ("10.10.20.1", "255.255.255.0", "00:11:22:33:44:55", "HostA");
         Host router = new Host ("0.0.0.0", "255.255.255.0", "11:22:33:44:55:66", "Router");
         Host hostB = new Host ("192.168.25.20", "255.255.255.0", "22:33:44:55:66:77", "HostB");
         Host hostC = new Host ("192.168.25.15", "255.255.255.0", "22:33:44:55:66:77", "HostC");
+=======
+
+>>>>>>> 14ceb802517a7362592de129b62f1875cd51729a
     }
 }
