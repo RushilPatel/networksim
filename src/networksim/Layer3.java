@@ -4,14 +4,15 @@ import java.util.HashMap;
 
 public class Layer3 implements Layer3Interface {
     HashMap<String, String> nextHop;
+    String defaultGateway;
 
     public Layer3() {
         nextHop = new HashMap<String, String>();
-        nextHop.put("10.10.20.1", "10.10.20.2");
+        this.defaultGateway = nextHop.get(defaultGateway);
     }
 
     @Override
-    public void receiveFromLayer2(Layer2 frame) {
+    public void receiveFromLayer2(Layer3 frame) {
         // TODO Auto-generated method stub
 
     }
@@ -23,7 +24,7 @@ public class Layer3 implements Layer3Interface {
     }
 
     @Override
-    public void receiveFromLayer4(Layer3 frame) {
+    public void receiveFromLayer4(Layer3 frame, String finalDestination) {
         // TODO Auto-generated method stub
 
     }
@@ -34,8 +35,12 @@ public class Layer3 implements Layer3Interface {
 
     }
 
-    // public String getNexHop(String host) {
-    //
-    // }
+    public String getNexHop(String host) {
+        if (nextHop.containsKey(host)) {
+            return nextHop.get(host);
+        } else {
+            return defaultGateway;
+        }
+    }
 
 }
