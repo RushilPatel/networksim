@@ -5,7 +5,7 @@ public interface Layer3Interface {
 
     public void sendToLayer4();
 
-    public void receiveFromLayer4(Layer4 frame);
+    public void receiveFromLayer4(Layer3 frame);
 
     public void sendToLayer2();
 }

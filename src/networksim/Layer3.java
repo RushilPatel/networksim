@@ -7,6 +7,7 @@ public class Layer3 implements Layer3Interface {
 
     public Layer3() {
         nextHop = new HashMap<String, String>();
+        nextHop.put("10.10.20.1", "10.10.20.2");
     }
 
     @Override
@@ -22,7 +23,7 @@ public class Layer3 implements Layer3Interface {
     }
 
     @Override
-    public void receiveFromLayer4( frame) {
+    public void receiveFromLayer4(Layer3 frame) {
         // TODO Auto-generated method stub
 
     }
@@ -32,5 +33,9 @@ public class Layer3 implements Layer3Interface {
         // TODO Auto-generated method stub
 
     }
+
+    // public String getNexHop(String host) {
+    //
+    // }
 
 }
