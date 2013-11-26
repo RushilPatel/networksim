@@ -6,20 +6,20 @@ import java.util.PriorityQueue;
 public class Main {
 
     public static byte[] hostAIP = new byte[] {(byte) 10, (byte) 10, (byte) 20, (byte) 1};
-    public static byte[] hostASubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};;
+    public static byte[] hostASubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] hostAMAC = new byte[] {(byte) 11, (byte) 22, (byte) 33 , (byte) 44, (byte) 55, (byte) 66};
     
     public static byte[] hostBIP = new byte[] {(byte) 192, (byte) 168, (byte) 25, (byte) 20};
-    public static byte[] hostBSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};;
-    public static byte[] hostBMAC = new byte[] {(byte) 22, (byte) 33 , (byte) 44, (byte) 55, (byte) 66 , (byte) 77};;
+    public static byte[] hostBSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
+    public static byte[] hostBMAC = new byte[] {(byte) 22, (byte) 33 , (byte) 44, (byte) 55, (byte) 66 , (byte) 77};
 
     public static byte[] hostCIP = new byte[] {(byte) 192, (byte) 168, (byte) 25, (byte) 15};
-    public static byte[] hostCSubnet  = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};;
+    public static byte[] hostCSubnet  = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] hostCMAC = new byte[] {(byte) 33 , (byte) 44, (byte) 55, (byte) 66, (byte) 77, (byte) 88};;
     
     public static byte[] routerIP = new byte[] {(byte) 192, (byte) 0, (byte) 0, (byte) 0};
-    public static byte[] routerSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};;
-    public static byte[] routerMAC = new byte[] {(byte) 44, (byte) 55, (byte) 66 , (byte) 77, (byte) 88, (byte) 99};;
+    public static byte[] routerSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
+    public static byte[] routerMAC = new byte[] {(byte) 44, (byte) 55, (byte) 66 , (byte) 77, (byte) 88, (byte) 99};
     
     public static PriorityQueue<Packet> classABroadcast = new PriorityQueue<> ();
     public static PriorityQueue<Packet> classCBroadcast = new PriorityQueue<> ();
