@@ -8,14 +8,12 @@ public class Host implements Runnable{
     private byte[] macAddress;
     private String hostName;
     private byte[] subnetMask;
-    private int packetPriority;
     
     public Host(byte[] ipAddress, byte[] subnetMask, byte [] macAddress, String hostName){
         this.hostName = hostName;
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.subnetMask = subnetMask;
-        this.packetPriority = 0;
     }
     
     public byte [] getIPAddress(){
@@ -46,9 +44,10 @@ public class Host implements Runnable{
         //Layer1.receiveFromLayer2 (destIPAddress, this);
     }
     
+    //TODO: Add Support for router to separate networks
     public void send (byte[] bytesToSend){
         
-        Packet packetToSend = new Packet (bytesToSend, packetPriority++);
+        Packet packetToSend = new Packet (bytesToSend, Packet.getPriorityCounter ());
         boolean isClassA = (int)this.getIPAddress ()[0] < 0;
         if(isClassA){
             Main.classABroadcast.add (packetToSend);

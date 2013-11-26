@@ -1,7 +1,7 @@
 package networksim;
 
 public class Packet implements Comparable<Packet>{
-
+    private static int counter = 0;
     private byte[] data;
     private int priority;
     public Packet(byte [] data , int priority){
@@ -20,5 +20,9 @@ public class Packet implements Comparable<Packet>{
     @Override
     public int compareTo (Packet packet) {
         return this.getPriority () - packet.getPriority ();
+    }
+    
+    public static int getPriorityCounter(){
+        return counter++;
     }
 }

@@ -13,7 +13,7 @@ public class Layer1 {
     public static void processReceivedPacket(Packet packet , Host host){
         Layer2Frame frame = new Layer2Frame(packet.getData ());
         if(host.getMACAddress ().equals (frame.getDestAddr ())){
-            Layer2.recieveFromLayer1 (frame);
+            Layer2.recieveFromLayer1 (frame, host);
         }else{
             host.discardPacket(packet);
         }
