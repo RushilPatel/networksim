@@ -8,7 +8,6 @@ public class Layer3 implements Layer3Interface {
     HashMap<byte[], byte[]> hostBNextHop;
     HashMap<byte[], byte[]> hostCNextHop;
     HashMap<byte[], byte[]> routerNextHop;
-    String defaultGateway;
 
     @Override
     public void receiveFromLayer2(Layer3Frame frame) {
@@ -32,47 +31,28 @@ public class Layer3 implements Layer3Interface {
         // TODO Auto-generated method stub,
     }
 
-    public byte[] getNexHop(byte[] finalDestAddress, Host host) {
+    public byte[] getNextHop(byte[] finalDestAddress, Host host) {
 
         boolean isDestClassC = (int) finalDestAddress[0] < 0;
         boolean isHostClassC = (int) host.getIPAddress()[0] < 0;
 
         if (isDestClassC && isHostClassC) {
             if (Arrays.equals(finalDestAddress, host.getIPAddress())) {
-                // send it to layer 4
+                //TODO waiting for receive from layer 3 method
+                Layer4.  
             } else {
                 if (host.getHostName().equals("hostB")) {
-                    // send it to HOST C
+                    byte[] c = {(byte) 192, (byte) 168, (byte) 25, (byte) 15};
+                    return c;
                 } else {
-                    // send it to Host B
+                    byte[] b = {(byte) 192, (byte) 168, (byte) 25, (byte) 20};
+                    return b;
                 }
             }
         } else {
-            // send it to Router
+            byte[] router = {(byte) 192, (byte) 168, (byte) 25, (byte) 10};
+            return router;
         }
 
-        boolean isHostA = (int) hostAddress[0] < 0;
-        boolean isHostB;
-        boolean isHostC;
-        boolean isRouter;
-        if (isHostA) {
-            return hostANextHop.get(finalDestAddress);
-        } else if (isHostB) {
-            return hostBNextHop.get(finalDestAddress);
-        } else if (isHostC) {
-            return hostCNextHop.get(finalDestAddress);
-        } else if (isRouter) {
-            return routerNextHop.get(finalDestAddress);
-        }
-
-        // byte[] result = null;
-        // if (nextHop.containsKey(finalDestAddress)) {
-        // result = nextHop.get(host).getBytes();
-        // } else {
-        // result = nextHop.get(defaultGateway).getBytes();
-        // }
-
-        return result;
     }
-
 }
