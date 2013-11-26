@@ -2,7 +2,9 @@ package networksim;
 
 public class Layer2 implements Layer2Interface {
     
-    public static void recieveFromLayer3(Layer3Frame frame, byte[] nextHopAddress) {
+    //static ARP table as hashmap
+    
+    public static void recieveFromLayer3(Layer3Frame frame, byte[] nextHopAddress, Host host) {
         // TODO Auto-generated method stub
         
         // create a Layer2Frame and add the Layer3Frame as part of the body
@@ -16,7 +18,7 @@ public class Layer2 implements Layer2Interface {
         // pass the Layer2Frame object to Layer 1
     }
 
-    public static void recieveFromLayer1(Layer2Frame frame) {
+    public static void recieveFromLayer1(Layer2Frame frame, Host host) {
         // TODO Auto-generated method stub
         
     }
