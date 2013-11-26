@@ -9,7 +9,6 @@ public class Main {
     public static byte[] hostASubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};;
     public static byte[] hostAMAC = new byte[] {(byte) 11, (byte) 22, (byte) 33 , (byte) 44, (byte) 55, (byte) 66};
     
-<<<<<<< HEAD
     public static byte[] hostBIP = new byte[] {(byte) 192, (byte) 168, (byte) 25, (byte) 20};
     public static byte[] hostBSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};;
     public static byte[] hostBMAC = new byte[] {(byte) 22, (byte) 33 , (byte) 44, (byte) 55, (byte) 66 , (byte) 77};;
@@ -59,24 +58,5 @@ public class Main {
             hostCThread.join ();
             
         }        
-=======
-    public static void main(String[] args) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 1cb251f7252d678fe4770a65c78d8ebdc3e6c14c
-        Host hostA = new Host ("10.10.20.1", "255.255.255.0", "00:11:22:33:44:55", "HostA");
-        Host router = new Host ("0.0.0.0", "255.255.255.0", "11:22:33:44:55:66", "Router");
-        Host hostB = new Host ("192.168.25.20", "255.255.255.0", "22:33:44:55:66:77", "HostB");
-        Host hostC = new Host ("192.168.25.15", "255.255.255.0", "22:33:44:55:66:77", "HostC");
-<<<<<<< HEAD
-=======
-
->>>>>>> 14ceb802517a7362592de129b62f1875cd51729a
-=======
-
->>>>>>> 1cb251f7252d678fe4770a65c78d8ebdc3e6c14c
->>>>>>> 38c90778344ff3c0622a1607a75994a84d050b58
     }
 }
