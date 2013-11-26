@@ -11,7 +11,7 @@ public class Layer3 implements Layer3Interface {
     String defaultGateway;
 
     @Override
-    public void receiveFromLayer2(Layer3 frame) {
+    public void receiveFromLayer2(Layer3Frame frame) {
         // TODO Auto-generated method stub
 
     }
@@ -33,24 +33,24 @@ public class Layer3 implements Layer3Interface {
     }
 
     public byte[] getNexHop(byte[] finalDestAddress, Host host) {
-        
-        boolean isDestClassC = (int)finalDestAddress[0] < 0;
-        boolean isHostClassC = (int)host.getIPAddress()[0] < 0;        
-        
-        if(isDestClassC && isHostClassC){
-            if(Arrays.equals(finalDestAddress, host.getIPAddress())){
-                //send it to layer 4
-            }else{
-                if(host.getHostName().equals("hostB")){
-                    //send it to HOST C
-                }else{
-                    //send it to Host B
+
+        boolean isDestClassC = (int) finalDestAddress[0] < 0;
+        boolean isHostClassC = (int) host.getIPAddress()[0] < 0;
+
+        if (isDestClassC && isHostClassC) {
+            if (Arrays.equals(finalDestAddress, host.getIPAddress())) {
+                // send it to layer 4
+            } else {
+                if (host.getHostName().equals("hostB")) {
+                    // send it to HOST C
+                } else {
+                    // send it to Host B
                 }
             }
-        }else{
-            //send it to Router
+        } else {
+            // send it to Router
         }
-        
+
         boolean isHostA = (int) hostAddress[0] < 0;
         boolean isHostB;
         boolean isHostC;
