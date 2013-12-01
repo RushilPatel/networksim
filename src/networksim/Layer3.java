@@ -10,17 +10,19 @@ public class Layer3 implements Layer3Interface {
     HashMap<byte[], byte[]> routerNextHop;
 
     @Override
-    public void receiveFromLayer2(Layer3Frame frame) {
+    public void receiveFromLayer2(Layer3Frame frame, byte[] finalDestination,
+            Host host) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void sendToLayer4() {
+    public void sendToLayer4(Layer3Frame frame) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void receiveFromLayer4(Layer3Frame frame, byte[] finalDestination,
             Host host) {
 
@@ -38,19 +40,19 @@ public class Layer3 implements Layer3Interface {
 
         if (isDestClassC && isHostClassC) {
             if (Arrays.equals(finalDestAddress, host.getIPAddress())) {
-                //TODO waiting for receive from layer 3 method
-                Layer4.  
+                // TODO waiting for receive from layer 3 method
+                Layer4.
             } else {
                 if (host.getHostName().equals("hostB")) {
-                    byte[] c = {(byte) 192, (byte) 168, (byte) 25, (byte) 15};
+                    byte[] c = { (byte) 192, (byte) 168, (byte) 25, (byte) 15 };
                     return c;
                 } else {
-                    byte[] b = {(byte) 192, (byte) 168, (byte) 25, (byte) 20};
+                    byte[] b = { (byte) 192, (byte) 168, (byte) 25, (byte) 20 };
                     return b;
                 }
             }
         } else {
-            byte[] router = {(byte) 192, (byte) 168, (byte) 25, (byte) 10};
+            byte[] router = { (byte) 192, (byte) 168, (byte) 25, (byte) 10 };
             return router;
         }
 
