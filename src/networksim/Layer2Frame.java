@@ -45,7 +45,7 @@ public class Layer2Frame implements FrameInterface {
             type[j] = frameByteSequence[i];
       //Initialise body 
         body = new byte[frameByteSequence.length - CRC_SIZE_4 > 0 ? frameByteSequence.length - CRC_SIZE_4 : 0];
-        for(int j = 0; i < frameByteSequence.length - CRC_SIZE_4; i++, j++)
+        for(int j = 0; i < frameByteSequence.length - CRC_SIZE_4 && j < body.length; i++, j++)
             body[j] = frameByteSequence[i];
       //Initialise crc
         for(int j = 0; j < CRC_SIZE_4; i++, j++)
