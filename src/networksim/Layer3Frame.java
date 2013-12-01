@@ -103,4 +103,13 @@ public class Layer3Frame implements FrameInterface {
 
         return byteArr;
     }
+
+    public byte[] getBody() {
+        return body;
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
+
 }
