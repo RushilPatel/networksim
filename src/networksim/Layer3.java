@@ -4,14 +4,62 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Layer3 implements Layer3Interface {
-    HashMap<byte[], byte[]> hostANextHop;
-    HashMap<byte[], byte[]> hostBNextHop;
-    HashMap<byte[], byte[]> hostCNextHop;
-    HashMap<byte[], byte[]> routerNextHop;
+    HashMap<IpAddWrapper, byte[]> hostANextHop;
+    HashMap<IpAddWrapper, byte[]> hostBNextHop;
+    HashMap<IpAddWrapper, byte[]> hostCNextHop;
+    HashMap<IpAddWrapper, byte[]> routerNextHop;
+
+    /***
+     * Wrapper class for byte array. The class implements equals and hashCode
+     * method for the byte array.
+     * 
+     * @author meha
+     */
+    public static class IpAddWrapper {
+        byte[] ip = new byte[6];
+
+        public IpAddWrapper(byte[] ip) {
+            this.ip = ip;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other == null)
+                return false;
+            if (!(other instanceof IpAddWrapper))
+                return false;
+
+            IpAddWrapper obj = (IpAddWrapper) other;
+            if (obj == this)
+                return true;
+            if (ip.length != obj.ip.length)
+                return false;
+
+            for (int i = 0; i < ip.length; i++) {
+                if (ip[i] != obj.ip[i])
+                    return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hashcode = 0;
+
+            for (byte b : ip) {
+                int tmp = (int) b;
+                if (tmp < 0)
+                    tmp = 256 + tmp;
+                hashcode += 31 * b;
+            }
+
+            return hashcode;
+        }
+    }
 
     @Override
-    public void receiveFromLayer2(Layer3Frame frame, byte[] finalDestination,
-            Host host) {
+    public void receiveFromLayer2(Layer3Frame frame, Host host) {
         // TODO Auto-generated method stub
 
     }
