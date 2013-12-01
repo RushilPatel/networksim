@@ -2,7 +2,7 @@ package networksim;
 
 import java.util.HashMap;
 
-public class Layer3 implements Layer3Interface {
+public class Layer3 {
     // The forwarding tables for each node in the network
     static HashMap<IpAddWrapper, byte[]> hostANextHop;
     static HashMap<IpAddWrapper, byte[]> hostBNextHop;
@@ -71,17 +71,22 @@ public class Layer3 implements Layer3Interface {
         createTables();
     }
 
-    @Override
-    public void receiveFromLayer2(Layer3Frame frame, Host host) {
-        // No processing is done in the method. Layer 3 simply sends the frame
-        // along to layer 4
-        Layer4.receiveFromLayer3(frame.body, host);
+    public static void receiveFromLayer2(Layer3Frame frame, Host host) {
+        // This method will see if the packet is meant for this host or not. If
+        // it is, it will send the packet up to layer 4. If not,
+        // Layer 3 will attach a next hop and send it back down to layer 2
+        // This checks if the packet is meant for this host.
+        if (new IpAddWrapper(frame.destinationAddr).equals(host.getIPAddress())) {
+            Layer4.receiveFromLayer3(frame, host);
+        } else {
+            byte[] nextHop = getNextHop(frame.destinationAddr, host);
+            Layer2.recieveFromLayer3(frame, nextHop, host);
+        }
 
     }
 
-    @Override
-    public void receiveFromLayer4(Layer3Frame frame, byte[] finalDestination,
-            Host host) {
+    public static void receiveFromLayer4(Layer3Frame frame,
+            byte[] finalDestination, Host host) {
         // Determine the next hop and then send to layer 2
         byte[] nextHop = getNextHop(finalDestination, host);
         Layer2.recieveFromLayer3(frame, nextHop, host);

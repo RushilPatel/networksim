@@ -112,4 +112,44 @@ public class Layer3Frame implements FrameInterface {
         this.body = body;
     }
 
+    public byte[] getVersionHLen() {
+        return versionHLen;
+    }
+
+    public byte[] getTos() {
+        return tos;
+    }
+
+    public byte[] getLength() {
+        return length;
+    }
+
+    public byte[] getIdent() {
+        return ident;
+    }
+
+    public byte[] getFlagsOffset() {
+        return flagsOffset;
+    }
+
+    public byte[] getTtl() {
+        return ttl;
+    }
+
+    public byte[] getProtocol() {
+        return protocol;
+    }
+
+    public byte[] getChecksum() {
+        return checksum;
+    }
+
+    public byte[] getSourceAddr() {
+        return sourceAddr;
+    }
+
+    public byte[] getDestinationAddr() {
+        return destinationAddr;
+    }
+
 }
