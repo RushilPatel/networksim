@@ -152,4 +152,35 @@ public class Layer3Frame implements FrameInterface {
         return destinationAddr;
     }
 
+    public static String byteAddressToString(byte[] arr) {
+        StringBuilder sb = new StringBuilder();
+        
+        if(arr.length == 4) {
+            for (int i = 0; i < arr.length; i++) {
+                int tmp = 0;
+                tmp |= arr[i];
+                sb.append(tmp);
+                if (i != arr.length - 1)
+                    sb.append(".");
+            }
+        } else {
+            for (int i = 0; i < arr.length; i++) {
+                int tmp = 0;
+                tmp |= arr[i];
+                sb.append(String.format("%x", tmp));
+                if (i != arr.length - 1)
+                    sb.append(":");
+            }
+        }
+        return sb.toString();
+    }
+    
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(String.format("SrcIP %s, ", byteAddressToString(sourceAddr)));
+        sb.append(String.format("DestIP %s", byteAddressToString(destinationAddr)));
+        
+        return sb.toString();
+    }
 }
