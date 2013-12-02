@@ -52,19 +52,23 @@ public class Layer2 implements Layer2Interface {
     
     /***
      * Initialises ARPTable entries. This method should be called before any of Layer2 methods are used.
+     * @param ip - IP address
+     * @param mac - corresponding MAC address
      */
-    public static void init() {
+    public static void init(byte[] ip, byte[] mac) {
         // initialize ARP table
-        ARPTable = new HashMap<IpAddWrapper, byte[]>();
+        if(ARPTable == null)
+            ARPTable = new HashMap<IpAddWrapper, byte[]>();
         
-        byte[] ip1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10};
-        byte[] ip2 = {(byte) 10, (byte) 10, (byte) 11, (byte) 11};
+ //       byte[] ip1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10};
+ //       byte[] ip2 = {(byte) 10, (byte) 10, (byte) 11, (byte) 11};
         
-        byte[] mac1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10, (byte) 10, (byte) 10};
-        byte[] mac2 = {(byte) 11, (byte) 11, (byte) 11, (byte) 11, (byte) 11, (byte) 11};
+ //       byte[] mac1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10, (byte) 10, (byte) 10};
+ //       byte[] mac2 = {(byte) 11, (byte) 11, (byte) 11, (byte) 11, (byte) 11, (byte) 11};
         
-        ARPTable.put(new IpAddWrapper(ip1), mac1);
-        ARPTable.put(new IpAddWrapper(ip2), mac2);
+//        ARPTable.put(new IpAddWrapper(ip1), mac1);
+//        ARPTable.put(new IpAddWrapper(ip2), mac2);
+            ARPTable.put(new IpAddWrapper(ip), mac);
     }
     
     /***
@@ -114,7 +118,7 @@ public class Layer2 implements Layer2Interface {
     }
     
     public static void main(String[] args) {
-        init();
+//        init();
         
         byte[] ip1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10};
         byte[] ip2 = {(byte) 10, (byte) 10, (byte) 11, (byte) 11};
