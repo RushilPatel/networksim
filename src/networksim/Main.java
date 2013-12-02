@@ -46,17 +46,18 @@ public class Main {
         
         while(transferring || !classABroadcast.isEmpty () || !classCBroadcast.isEmpty ()){
             hostAThread.run ();
-            hostAThread.join ();
+            //hostAThread.join ();
             
             routerThread.run ();
-            routerThread.join ();
+            //routerThread.join ();
             
             hostBThread.run ();
-            hostBThread.join ();
+            //hostBThread.join ();
             
             hostCThread.run ();
-            hostCThread.join ();
+            //hostCThread.join ();
             
-        }        
+        }
+        
     }
 }
