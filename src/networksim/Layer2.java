@@ -2,7 +2,7 @@ package networksim;
 
 import java.util.HashMap;
 
-public class Layer2 implements Layer2Interface {
+public class Layer2 {
     
     //static ARP table as hashmap
     public static HashMap<IpAddWrapper, byte[]> ARPTable;
@@ -79,7 +79,7 @@ public class Layer2 implements Layer2Interface {
      * @param host - current host machine information processing this packet 
      */
     public static void recieveFromLayer3(Layer3Frame frame, byte[] nextHopAddress, Host host) {
-        
+        System.out.printf("%s: layer 2: received packet(%s) from layer 3", host.getHostName(), frame.toString());
         // create a Layer2Frame and add the Layer3Frame as part of the body
         Layer2Frame l2 = new Layer2Frame();
         l2.setBody(frame.toByteArray());
@@ -99,6 +99,7 @@ public class Layer2 implements Layer2Interface {
         l2.calculateAndSetCRC();
         
         // pass the Layer2Frame object to Layer 1
+        System.out.printf("%s: layer 2: passing frame(%s) to layer 1", host.getHostName(), l2.toString());
         Layer1.receiveFromLayer2(l2, host, nextHopAddress);
     }
 
@@ -109,11 +110,19 @@ public class Layer2 implements Layer2Interface {
      * @param host - current host machine information processing this packet
      */
     public static void recieveFromLayer1(Layer2Frame frame, Host host) {
+        System.out.printf("%s: layer 2: received packet(%s) from layer 1", host.getHostName(), frame.toString());
+        
+        // check crc 
+        if(!frame.verifyCRC()) {
+            System.out.printf("%s: layer 2: ERROR invalid CRC!");
+            return;
+        }
         
         // create a layer 3 frame
         Layer3Frame l3 = new Layer3Frame(frame.getBody());
         
         // pass layer 3 frame to layer 3
+        System.out.printf("%s: layer 2: passing frame(%s) to layer 3", host.getHostName(), l3.toString());
         Layer3.receiveFromLayer2(l3, host);
     }
     

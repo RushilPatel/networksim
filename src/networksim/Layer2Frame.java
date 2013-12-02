@@ -52,6 +52,49 @@ public class Layer2Frame implements FrameInterface {
             crc[j] = frameByteSequence[i];
     }
     
+    /***
+     * Accepts byte array representation of a MAC or an IP address and returns string representation.
+     * @param arr byte array
+     * @return string representation of a byte array MAC or an IP address. 
+     */
+    public static String byteAddressToString(byte[] arr) {
+        StringBuilder sb = new StringBuilder();
+        
+        if(arr.length == 4) {
+            for (int i = 0; i < arr.length; i++) {
+                int tmp = 0;
+                tmp |= arr[i];
+                sb.append(tmp);
+                if (i != arr.length - 1)
+                    sb.append(".");
+            }
+        } else {
+            for (int i = 0; i < arr.length; i++) {
+                int tmp = 0;
+                tmp |= arr[i];
+                sb.append(String.format("%x", tmp));
+                if (i != arr.length - 1)
+                    sb.append(":");
+            }
+        }
+        return sb.toString();
+    }
+    
+    /***
+     * To string method for Layer 2 frames. 
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(String.format("SrcMAC %s, ", byteAddressToString(srcAddr)));
+        sb.append(String.format("DestMAC %s", byteAddressToString(destAddr)));
+        
+        return sb.toString();
+    }
+    
+    /***
+     * converts the frame into a byte array.
+     */
     @Override
     public byte[] toByteArray() {
         byte[] byteArr = new byte[HEADER_N_CRC_SIZE + body.length]; 
@@ -74,6 +117,10 @@ public class Layer2Frame implements FrameInterface {
         return byteArr;
     }
 
+    /***
+     * Byte array representation of the frame excluding CRC.
+     * @return
+     */
     private byte[] toByteArrayWithoutCRC() {
         byte[] byteArr = new byte[HEADER_N_CRC_SIZE - CRC_SIZE_4 + body.length]; 
         
@@ -128,10 +175,17 @@ public class Layer2Frame implements FrameInterface {
         this.crc = crc;
     }
     
+    /***
+     * Calculates the CRC for the frame and sets CRC member variable.
+     */
     public void calculateAndSetCRC() {
         setCrc(calculateCRC());
     }
     
+    /***
+     * Calculates the CRC for the frame and returns the result as byte array.
+     * @return byte array representation of the calculated CRC.
+     */
     private byte[] calculateCRC() {
         CRC32 crc32 = new CRC32();
         crc32.update(this.toByteArrayWithoutCRC());
@@ -148,6 +202,10 @@ public class Layer2Frame implements FrameInterface {
         return crcArr;
     }
 
+    /***
+     * Verifies if the CRC that is stored in the frame is a correct.
+     * @return true if CRC is correct.
+     */
     public boolean verifyCRC() {
         byte[] calc = calculateCRC();
         
