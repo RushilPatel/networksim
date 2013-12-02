@@ -14,16 +14,16 @@ public class Layer3Frame implements FrameInterface {
     private static final int DESTINATION_ADDRESS_SIZE = 4;
     private static final int MIN_BODY_SIZE = 46;
     // Omitted Options and Pad field as I didn't see them necessary
-    final byte[] versionHLen = new byte[VERSION_HLEN_SIZE];
-    final byte[] tos = new byte[TOS_SIZE];
-    final byte[] length = new byte[LENGTH];
-    final byte[] ident = new byte[IDENT_SIZE];
-    final byte[] flagsOffset = new byte[FLAGS_OFFSET_SIZE];
-    final byte[] ttl = new byte[TTL_SIZE];
-    final byte[] protocol = new byte[PROTOCOL_SIZE];
-    final byte[] checksum = new byte[CHECKSUM_SIZE];
-    final byte[] sourceAddr = new byte[SOURCE_ADDRESS_SIZE];
-    final byte[] destinationAddr = new byte[DESTINATION_ADDRESS_SIZE];
+    byte[] versionHLen = new byte[VERSION_HLEN_SIZE];
+    byte[] tos = new byte[TOS_SIZE];
+    byte[] length = new byte[LENGTH];
+    byte[] ident = new byte[IDENT_SIZE];
+    byte[] flagsOffset = new byte[FLAGS_OFFSET_SIZE];
+    byte[] ttl = new byte[TTL_SIZE];
+    byte[] protocol = new byte[PROTOCOL_SIZE];
+    byte[] checksum = new byte[CHECKSUM_SIZE];
+    byte[] sourceAddr = new byte[SOURCE_ADDRESS_SIZE];
+    byte[] destinationAddr = new byte[DESTINATION_ADDRESS_SIZE];
     byte[] body = new byte[MIN_BODY_SIZE];
 
     public static final int HEADER_SIZE = 1 + 1 + 2 + 2 + 2 + 1 + 1 + 2 + 4 + 4;

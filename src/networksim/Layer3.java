@@ -1,5 +1,6 @@
 package networksim;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class Layer3 {
@@ -77,7 +78,11 @@ public class Layer3 {
         // Layer 3 will attach a next hop and send it back down to layer 2
         // This checks if the packet is meant for this host.
         if (new IpAddWrapper(frame.destinationAddr).equals(host.getIPAddress())) {
-            Layer4.receiveFromLayer3(frame, host);
+            try {
+                Layer4.receiveFromLayer3(frame, host);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             byte[] nextHop = getNextHop(frame.destinationAddr, host);
             Layer2.recieveFromLayer3(frame, nextHop, host);
