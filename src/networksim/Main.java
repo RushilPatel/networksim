@@ -31,7 +31,7 @@ public class Main {
         final Host router = new Host (routerIP, routerSubnet, routerMAC, "Router");
         final Host hostB = new Host (hostBIP, hostBSubnet, hostBMAC, "HostB");
         final Host hostC = new Host (hostCIP, hostCSubnet, hostCMAC, "HostC");
-
+        //Layer2.init(); //uncomment this in the end
         Thread hostAThread = new Thread (hostA);
         Thread routerThread = new Thread (router);
         Thread hostBThread = new Thread (hostB);
