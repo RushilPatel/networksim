@@ -95,7 +95,7 @@ public class Layer2 implements Layer2Interface {
         l2.calculateAndSetCRC();
         
         // pass the Layer2Frame object to Layer 1
-        Layer1.receiveFromLayer2(l2, host);
+        Layer1.receiveFromLayer2(l2, host, nextHopAddress);
     }
 
     /***
