@@ -77,7 +77,7 @@ public class Layer3 {
         // it is, it will send the packet up to layer 4. If not,
         // Layer 3 will attach a next hop and send it back down to layer 2
         // This checks if the packet is meant for this host.
-        if (new IpAddWrapper(frame.destinationAddr).equals(host.getIPAddress())) {
+        if (new IpAddWrapper(frame.destinationAddr).equals( new IpAddWrapper(host.getIPAddress()))) {
             try {
                 Layer4.receiveFromLayer3(frame, host);
             } catch (IOException e) {

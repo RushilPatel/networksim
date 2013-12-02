@@ -17,9 +17,13 @@ public class Main {
     public static byte[] hostCSubnet  = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] hostCMAC = new byte[] {(byte) 33 , (byte) 44, (byte) 55, (byte) 66, (byte) 77, (byte) 88};;
     
-    public static byte[] routerIP = new byte[] {(byte) 192, (byte) 0, (byte) 0, (byte) 0};
+    public static byte[] routerIP = new byte[] {(byte) 192, (byte) 168, (byte) 25, (byte) 10};
     public static byte[] routerSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] routerMAC = new byte[] {(byte) 44, (byte) 55, (byte) 66 , (byte) 77, (byte) 88, (byte) 99};
+    
+    public static byte[] routerIP2 = new byte[] {(byte) 10, (byte) 10, (byte) 20, (byte) 2};
+    public static byte[] routerSubnet2 = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
+    public static byte[] routerMAC2 = new byte[] {(byte) 33, (byte) 55, (byte) 66 , (byte) 77, (byte) 88, (byte) 99};
     
     public static PriorityQueue<Packet> classABroadcast = new PriorityQueue<> ();
     public static PriorityQueue<Packet> classCBroadcast = new PriorityQueue<> ();
@@ -28,10 +32,15 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
                         
         final Host hostA = new Host (hostAIP, hostASubnet, hostAMAC, "HostA");
-        final Host router = new Host (routerIP, routerSubnet, routerMAC, "Router");
+        final Host router = new Host (routerIP, routerSubnet, routerMAC, "Router", routerIP2, routerSubnet2, routerMAC2);
         final Host hostB = new Host (hostBIP, hostBSubnet, hostBMAC, "HostB");
         final Host hostC = new Host (hostCIP, hostCSubnet, hostCMAC, "HostC");
-        //Layer2.init(); //uncomment this in the end
+        Layer2.init(hostAIP, hostAMAC);
+        Layer2.init(hostBIP, hostBMAC);
+        Layer2.init(hostCIP, hostCMAC);
+        Layer2.init(routerIP, routerMAC);
+        Layer2.init(routerIP2, routerMAC2);
+        Layer3.init ();
         Thread hostAThread = new Thread (hostA);
         Thread routerThread = new Thread (router);
         Thread hostBThread = new Thread (hostB);
@@ -39,7 +48,7 @@ public class Main {
         transferring = true;
         new Thread (new Runnable() {
             public void run () {
-                hostB.sendFile (hostC.getIPAddress (), new File ("Test"));         
+                hostA.sendFile (hostC.getIPAddress (), new File ("Atlas.mp3"));         
                 transferring = false;
             }
         }).start ();
