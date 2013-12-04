@@ -1,6 +1,7 @@
 package networksim;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 public class Layer3 {
@@ -14,7 +15,7 @@ public class Layer3 {
      * Wrapper class for byte array. The class implements equals and hashCode
      * method for the byte array.
      * 
-     * @author mehadi
+     * @author Mehadi
      */
     public static class IpAddWrapper {
         byte[] ip = new byte[6];
@@ -23,6 +24,10 @@ public class Layer3 {
             this.ip = ip;
         }
 
+        /*
+         * (non-Javadoc)
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
         @Override
         public boolean equals(Object other) {
             if (other == null)
@@ -44,6 +49,10 @@ public class Layer3 {
             return true;
         }
 
+        /*
+         * (non-Javadoc)
+         * @see java.lang.Object#hashCode()
+         */
         @Override
         public int hashCode() {
             int hashcode = 0;
@@ -72,32 +81,69 @@ public class Layer3 {
         createTables();
     }
 
+    /**
+     * This method will receive from Layer 2 and determine if the packet is for
+     * this host
+     * 
+     * @param frame
+     *            The frame to be processed
+     * @param host
+     *            The host that the packet is currently at
+     */
     public static void receiveFromLayer2(Layer3Frame frame, Host host) {
         // This method will see if the packet is meant for this host or not. If
         // it is, it will send the packet up to layer 4. If not,
         // Layer 3 will attach a next hop and send it back down to layer 2
         // This checks if the packet is meant for this host.
-        if (new IpAddWrapper(frame.destinationAddr).equals( new IpAddWrapper(host.getIPAddress()))) {
+        if (new IpAddWrapper(frame.destinationAddr).equals(new IpAddWrapper(
+                host.getIPAddress()))) {
+            System.out.println("Host: " + host.getHostName()
+                    + " received a packet... ");
             try {
                 Layer4.receiveFromLayer3(frame, host);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
+            // Not meant for this host so assign next hop and send back down to
+            // layer 2
             byte[] nextHop = getNextHop(frame.destinationAddr, host);
             Layer2.recieveFromLayer3(frame, nextHop, host);
         }
 
     }
 
+    /**
+     * This method will receive a packet from layer 4, assign a next hop and a
+     * checksum and send it down to layer 2
+     * 
+     * @param frame
+     *            The frame to be processed
+     * @param finalDestination
+     *            The byte array representation of the final host
+     * @param host
+     *            The current host (Location)
+     */
     public static void receiveFromLayer4(Layer3Frame frame,
             byte[] finalDestination, Host host) {
         // Determine the next hop and then send to layer 2
+        System.out.println("Host: " + host.getHostName()
+                + " received a packet... ");
         byte[] nextHop = getNextHop(finalDestination, host);
+        frame.checksum = calculateChecksum(frame.body);
         Layer2.recieveFromLayer3(frame, nextHop, host);
 
     }
 
+    /**
+     * This method will look at a forwarding table and determine the next hop
+     * 
+     * @param finalDestAddress
+     *            The address of the final host
+     * @param host
+     *            the current host
+     * @return a byte array representation of the IP address of the next hop
+     */
     public static byte[] getNextHop(byte[] finalDestAddress, Host host) {
         createTables();
         // Default gateways
@@ -128,6 +174,10 @@ public class Layer3 {
         }
     }
 
+    /**
+     * This method will hard code the forwarding tables based on the projects
+     * given topology
+     */
     public static void createTables() {
         byte[] dest1A = { (byte) 10, (byte) 10, (byte) 20, (byte) 1 };
         byte[] dest2B = { (byte) 192, (byte) 168, (byte) 25, (byte) 20 };
@@ -145,4 +195,52 @@ public class Layer3 {
         hostCNextHop.put(new IpAddWrapper(dest2B), dest2B);
     }
 
+    /**
+     * This method will take the body of a frame and calculate the IPv4 checksum
+     * and insert it into the IPv4 Header
+     * 
+     * @param buf
+     *            The body of the frame to be processed
+     * @return a byte array representation of the IPv4 Checksum
+     */
+    public static byte[] calculateChecksum(byte[] buf) {
+        int length = buf.length;
+        int i = 0;
+
+        long sum = 0;
+        long data;
+
+        // Handle all pairs
+        while (length > 1) {
+            data = (((buf[i] << 8) & 0xFF00) | ((buf[i + 1]) & 0xFF));
+            sum += data;
+            // 1's complement carry bit correction in 16-bits (detecting sign
+            // extension)
+            if ((sum & 0xFFFF0000) > 0) {
+                sum = sum & 0xFFFF;
+                sum += 1;
+            }
+
+            i += 2;
+            length -= 2;
+        }
+
+        // Handle remaining byte in odd length buffers
+        if (length > 0) {
+            sum += (buf[i] << 8 & 0xFF00);
+            // 1's complement carry bit correction in 16-bits (detecting sign
+            // extension)
+            if ((sum & 0xFFFF0000) > 0) {
+                sum = sum & 0xFFFF;
+                sum += 1;
+            }
+        }
+
+        // Final 1's complement value correction to 16-bits
+        sum = ~sum;
+        sum = sum & 0xFFFF;
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putLong(sum);
+        return buffer.array();
+    }
 }

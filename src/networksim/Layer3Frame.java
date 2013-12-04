@@ -1,6 +1,7 @@
 package networksim;
 
 public class Layer3Frame implements FrameInterface {
+    // IPv4 Header Field sizes
     // All values are in bytes
     private static final int VERSION_HLEN_SIZE = 1;
     private static final int TOS_SIZE = 1;
@@ -14,6 +15,7 @@ public class Layer3Frame implements FrameInterface {
     private static final int DESTINATION_ADDRESS_SIZE = 4;
     private static final int MIN_BODY_SIZE = 46;
     // Omitted Options and Pad field as I didn't see them necessary
+    // Actual IPv4 Header Fields
     byte[] versionHLen = new byte[VERSION_HLEN_SIZE];
     byte[] tos = new byte[TOS_SIZE];
     byte[] length = new byte[LENGTH];
@@ -26,12 +28,23 @@ public class Layer3Frame implements FrameInterface {
     byte[] destinationAddr = new byte[DESTINATION_ADDRESS_SIZE];
     byte[] body = new byte[MIN_BODY_SIZE];
 
+    // Guaranteed IPv4 Header size (Excludes the Body)
     public static final int HEADER_SIZE = 1 + 1 + 2 + 2 + 2 + 1 + 1 + 2 + 4 + 4;
 
+    /**
+     * This method serves as the generic constructor so that a Layer 3 Frame can
+     * be blankly constructed
+     */
     public Layer3Frame() {
 
     }
 
+    /**
+     * This method serves as a copy constructor for Layer 3 Frame
+     * 
+     * @param frameByteSequence
+     *            The information to be transformed into a Layer 3 Frame
+     */
     public Layer3Frame(byte[] frameByteSequence) {
         this();
 
@@ -75,8 +88,13 @@ public class Layer3Frame implements FrameInterface {
             body[j] = frameByteSequence[i];
     }
 
+    /*
+     * (non-Javadoc)
+     * @see networksim.FrameInterface#toByteArray()
+     */
     @Override
     public byte[] toByteArray() {
+        // The continuous byte array that will be eventually written on the line
         byte[] byteArr = new byte[HEADER_SIZE + body.length];
 
         int i = 0;
@@ -152,10 +170,18 @@ public class Layer3Frame implements FrameInterface {
         return destinationAddr;
     }
 
+    /***
+     * Accepts byte array representation of a MAC or an IP address and returns
+     * string representation.
+     * 
+     * @param arr
+     *            byte array
+     * @return string representation of a byte array MAC or an IP address.
+     */
     public static String byteAddressToString(byte[] arr) {
         StringBuilder sb = new StringBuilder();
-        
-        if(arr.length == 4) {
+
+        if (arr.length == 4) {
             for (int i = 0; i < arr.length; i++) {
                 int tmp = 0;
                 tmp |= arr[i];
@@ -174,13 +200,17 @@ public class Layer3Frame implements FrameInterface {
         }
         return sb.toString();
     }
-    
+
+    /***
+     * To string method for Layer 3 frames.
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append(String.format("SrcIP %s, ", byteAddressToString(sourceAddr)));
-        sb.append(String.format("DestIP %s", byteAddressToString(destinationAddr)));
-        
+        sb.append(String.format("DestIP %s",
+                byteAddressToString(destinationAddr)));
+
         return sb.toString();
     }
 }
