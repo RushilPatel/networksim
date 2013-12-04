@@ -23,8 +23,9 @@ public class Layer4 {
 	 * @param fileToSend a handle to the file that should be sent
 	 * @param host Host address
 	 * @param destIPAddress Destination IP Address
+	 * @throws IOException 
 	 */
-    public static void receiveFromHost(File fileToSend, Host host, byte [] destIPAddress){
+    public static void receiveFromHost(File fileToSend, Host host, byte [] destIPAddress) throws IOException{
     	sendToLayer3(fileToSend, host, destIPAddress);
     	
 	}
@@ -37,9 +38,9 @@ public class Layer4 {
      * @param chunkSize The applicable size of a chunk which equals to the MTU subtracted from layer3's header size and layer2's header size.
      * @param tmp is there to check when the reading process should be considered done, where tmp becomes negative.
      */
-    public static void sendToLayer3(File fileToSend, Host host, byte [] destIPAddress) {
-    	int chunkSize = 1400 - Layer3Frame.HEADER_SIZE - Layer2Frame.HEADER_N_CRC_SIZE;
+    public static void sendToLayer3(File fileToSend, Host host, byte [] destIPAddress) throws IOException{
     	
+    	int chunkSize = 1400 - Layer3Frame.HEADER_SIZE - Layer2Frame.HEADER_N_CRC_SIZE;
     	BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fileToSend));
         FileOutputStream out;
         int partCounter = 1;
@@ -77,6 +78,7 @@ public class Layer4 {
     	while(n > 0 && i < 2) {
     		arr[i] =(byte) (n % 256);
     		n = n >> 8;
+    		i ++;
     	}
     	
     	return arr;
@@ -120,7 +122,7 @@ public class Layer4 {
 		byte[] flagsOffset = frame.flagsOffset;
 		
 		//Convert the Byte array to decimal value
-		long offsetDec = 0;
+		//long offsetDec = 0;
 		boolean flag = false;
 		if ((int)(flagsOffset[1] & (byte)0x20) != 0){
 			//Flag is set
