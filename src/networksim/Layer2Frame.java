@@ -1,5 +1,6 @@
 package networksim;
 
+import java.util.Random;
 import java.util.zip.CRC32;
 
 public class Layer2Frame implements FrameInterface {
@@ -44,8 +45,9 @@ public class Layer2Frame implements FrameInterface {
         for(int j = 0; j < TYPE_SIZE_2; i++, j++) 
             type[j] = frameByteSequence[i];
       //Initialize body 
-        body = new byte[frameByteSequence.length - CRC_SIZE_4 > 0 ? frameByteSequence.length - CRC_SIZE_4 : 0];
-        for(int j = 0; i < frameByteSequence.length - CRC_SIZE_4 && j < body.length; i++, j++)
+        int bodySize = frameByteSequence.length - HEADER_N_CRC_SIZE > 0 ? frameByteSequence.length - HEADER_N_CRC_SIZE : 0;
+        body = new byte[bodySize];
+        for(int j = 0; j < body.length; i++, j++)
             body[j] = frameByteSequence[i];
         // Initialize crc
         for(int j = 0; j < CRC_SIZE_4; i++, j++)
@@ -72,7 +74,7 @@ public class Layer2Frame implements FrameInterface {
             for (int i = 0; i < arr.length; i++) {
                 int tmp = 0;
                 tmp |= arr[i];
-                sb.append(String.format("%x", tmp));
+                sb.append(String.format("%02x", tmp));
                 if (i != arr.length - 1)
                     sb.append(":");
             }
@@ -219,9 +221,23 @@ public class Layer2Frame implements FrameInterface {
         return true;
     }
     
-    public static void main( String[] args) {
-        Layer2Frame f = new Layer2Frame();
-        f.calculateAndSetCRC();
+    public static void main(String[] args) {
+        Random rng  = new Random();
+        Layer2Frame l = new Layer2Frame();
+        byte[] randBody = new byte[50];
+        rng.nextBytes(randBody);
+        byte[] src = new byte[Layer2Frame.ADDRESS_SIZE_6];
+        rng.nextBytes(src);
+        byte[] dst = new byte[Layer2Frame.ADDRESS_SIZE_6];
+        rng.nextBytes(dst);
+        
+        l.setSrcAddr(src);
+        l.setDestAddr(dst);
+        l.setBody(randBody);
+        l.calculateAndSetCRC();
+        
+        Layer2Frame f = new Layer2Frame(l.toByteArray());
         System.out.println(f.verifyCRC());
     }
+    
 }

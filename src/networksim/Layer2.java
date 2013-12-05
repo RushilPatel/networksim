@@ -114,7 +114,7 @@ public class Layer2 {
         
         // check crc 
         if(!frame.verifyCRC()) {
-            System.out.printf("%s: layer 2: ERROR invalid CRC!");
+            System.out.printf("%s: layer 2: ERROR invalid CRC!",host.getHostName());
             return;
         }
         
@@ -126,13 +126,4 @@ public class Layer2 {
         Layer3.receiveFromLayer2(l3, host);
     }
     
-    public static void main(String[] args) {
-//        init();
-        
-        byte[] ip1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10};
-        byte[] ip2 = {(byte) 10, (byte) 10, (byte) 11, (byte) 11};
-        
-        System.out.println(ARPTable.containsKey(new IpAddWrapper(ip1)));
-        System.out.println(ARPTable.containsKey(new IpAddWrapper(ip2)));
-    }
 }
