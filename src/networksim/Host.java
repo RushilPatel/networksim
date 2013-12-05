@@ -14,15 +14,23 @@ public class Host implements Runnable {
     private byte[] ipAddress2;
     private byte[] macAddress2;
     private byte[] subnetMask2;
+<<<<<<< HEAD
+    
+    public boolean isRouter;
+    
+    public Host(byte[] ipAddress, byte[] subnetMask, byte [] macAddress, String hostName){
+=======
 
     public boolean isRouter = false;
 
     public Host(byte[] ipAddress, byte[] subnetMask, byte[] macAddress,
             String hostName) {
+>>>>>>> a9b6d4846e7a525cd0a4814e14f73df57cec587c
         this.hostName = hostName;
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.subnetMask = subnetMask;
+        this.isRouter = false;
     }
 
     public Host(byte[] ipAddress, byte[] subnetMask, byte[] macAddress,
@@ -74,6 +82,12 @@ public class Host implements Runnable {
     public void receive(Packet packet, PriorityQueue<Packet> queue) {
         Layer1.processReceivedPacket(packet, this, queue);
     }
+<<<<<<< HEAD
+    
+    public void sendFile(byte [] destIPAddress, File fileToSend) throws IOException{
+        Layer4.receiveFromHost (fileToSend, this, destIPAddress);
+    }
+=======
 
     public void sendFile(byte[] destIPAddress, File fileToSend) {
         try {
@@ -105,6 +119,7 @@ public class Host implements Runnable {
     // Main.classCBroadcast.add (packet);
     // }
     // }
+>>>>>>> a9b6d4846e7a525cd0a4814e14f73df57cec587c
 
     @Override
     public synchronized void run() {

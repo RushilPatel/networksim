@@ -1,6 +1,7 @@
 package networksim;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.PriorityQueue;
 
 public class Main {
@@ -48,25 +49,20 @@ public class Main {
         transferring = true;
         new Thread (new Runnable() {
             public void run () {
-                hostA.sendFile (hostC.getIPAddress (), new File ("/home/meha/Desktop/router-config"));         
+                try {
+                    hostA.sendFile (hostC.getIPAddress (), new File ("Atlas.mp3"));
+                } catch (IOException e) {
+                    System.out.println ("There was an error parsing the file.");
+                }
                 transferring = false;
             }
         }).start ();
         
         while(transferring || !classABroadcast.isEmpty () || !classCBroadcast.isEmpty ()){
             hostAThread.run ();
-            //hostAThread.join ();
-            
             routerThread.run ();
-            //routerThread.join ();
-            
             hostBThread.run ();
-            //hostBThread.join ();
-            
             hostCThread.run ();
-            //hostCThread.join ();
-            
         }
-        
     }
 }
