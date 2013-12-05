@@ -239,8 +239,8 @@ public class Layer3 {
         // Final 1's complement value correction to 16-bits
         sum = ~sum;
         sum = sum & 0xFFFF;
-        ByteBuffer buffer = ByteBuffer.allocate(8);
-        buffer.putLong(sum);
+        ByteBuffer buffer = ByteBuffer.allocate(2);
+        buffer.putShort((short)sum);
         return buffer.array();
     }
 }

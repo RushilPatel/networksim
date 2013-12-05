@@ -2,7 +2,7 @@ package networksim;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.PriorityQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class Host implements Runnable {
 
@@ -72,7 +72,7 @@ public class Host implements Runnable {
         return this.hostName;
     }
 
-    public void receive(Packet packet, PriorityQueue<Packet> queue) {
+    public void receive(Packet packet, BlockingQueue<Packet> queue) {
         Layer1.processReceivedPacket(packet, this, queue);
     }
     
@@ -84,29 +84,59 @@ public class Host implements Runnable {
     @Override
     public synchronized void run() {
 
-        if (isRouter) {
-            if (!Main.classABroadcast.isEmpty()) {
-                this.receive(Main.classABroadcast.remove(),
-                        Main.classABroadcast);
-            }
-            if (!Main.classCBroadcast.isEmpty()) {
-                this.receive(Main.classCBroadcast.remove(),
-                        Main.classCBroadcast);
-            }
-        } else {
-            boolean isClassA = (int) this.getIPAddress()[0] > 0;
-            if (isClassA) {
+//        while(Main.transferring.get() || !Main.classABroadcast.isEmpty() || !Main.classCBroadcast.isEmpty()) causes packet out of order delivery
+        {
+            if (isRouter) {
                 if (!Main.classABroadcast.isEmpty()) {
-                    this.receive(Main.classABroadcast.remove(),
-                            Main.classABroadcast);
+                    synchronized(this) {
+                        try {
+                            this.receive(Main.classABroadcast.take(),
+                                Main.classABroadcast);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (!Main.classCBroadcast.isEmpty()) {
+                    synchronized(this) {
+                        try {
+                            this.receive(Main.classCBroadcast.take(),
+                                Main.classCBroadcast);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
                 }
             } else {
-                if (!Main.classCBroadcast.isEmpty()) {
-                    this.receive(Main.classCBroadcast.remove(),
-                            Main.classCBroadcast);
+                boolean isClassA = (int) this.getIPAddress()[0] > 0;
+                if (isClassA) {
+                    if (!Main.classABroadcast.isEmpty()) {
+                        synchronized(this) {
+                            try {
+                                this.receive(Main.classABroadcast.take(),
+                                    Main.classABroadcast);
+                            } catch (InterruptedException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } else {
+                    if (!Main.classCBroadcast.isEmpty()) {
+                        synchronized(this) {
+                            try {
+                                this.receive(Main.classCBroadcast.take(),
+                                    Main.classCBroadcast);
+                            } catch (InterruptedException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    } 
                 }
             }
         }
-
     }
 }

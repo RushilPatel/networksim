@@ -1,6 +1,7 @@
 package networksim;
 
 import java.util.PriorityQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class Layer1 {
 
@@ -8,9 +9,19 @@ public class Layer1 {
         Packet packetToSend = new Packet (frame.toByteArray (), Packet.getPriorityCounter ());
         boolean isClassA = nextHopIP[0] > 0;
         if(isClassA){
-            Main.classABroadcast.add (packetToSend);
+            try {
+                Main.classABroadcast.put (packetToSend);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }else{
-            Main.classCBroadcast.add (packetToSend);
+            try {
+                Main.classCBroadcast.put (packetToSend);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         System.out.println (host.getHostName () + " sent packet with priority " + packetToSend.getPriority ());
 
@@ -20,7 +31,7 @@ public class Layer1 {
 //        host.send (frame);
 //    }
     
-    public static void processReceivedPacket(Packet packet , Host host, PriorityQueue<Packet> queue){
+    public static void processReceivedPacket(Packet packet , Host host, BlockingQueue<Packet> queue){
         Layer2Frame frame = new Layer2Frame(packet.getData ());
         
         if(host.isRouter){
@@ -59,7 +70,7 @@ public class Layer1 {
         Layer2.recieveFromLayer1 (frame, host);
     }
     
-    private static void discardPacket(Packet packet , PriorityQueue<Packet> queue){
+    private static void discardPacket(Packet packet , BlockingQueue<Packet> queue){
         queue.add (packet);
     }
     private static boolean compareMacs(byte [] mac1, byte [] mac2){

@@ -9,6 +9,10 @@ public class Packet implements Comparable<Packet>{
         this.priority = priority;
     }
     
+    public Packet() {
+        
+    }
+    
     public byte [] getData(){
         return this.data;
     }

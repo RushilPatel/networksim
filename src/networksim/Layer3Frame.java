@@ -118,6 +118,8 @@ public class Layer3Frame implements FrameInterface {
             byteArr[i] = sourceAddr[j];
         for (int j = 0; j < destinationAddr.length; i++, j++)
             byteArr[i] = destinationAddr[j];
+        for (int j = 0; j < body.length; i++, j++)
+            byteArr[i] = body[j];
 
         return byteArr;
     }

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Layer4.java: This class simulates the functionalities of the Transport Layer (Layer4). 
@@ -48,19 +49,25 @@ public class Layer4 {
         int sizeOfFiles = chunkSize;
         byte[] buffer = new byte[sizeOfFiles];
         int tmp = 0;
+        boolean first = true;
         while ((tmp = bis.read(buffer)) > 0) {
         	Layer3Frame frame = new Layer3Frame();
         	frame.sourceAddr = host.getIPAddress();
         	frame.destinationAddr = destIPAddress;
         	
-        	frame.flagsOffset = intToByteArr(buffer.length);
+        	if(first) {    // first fragment
+        	    first = false;
+        	    frame.flagsOffset = intToByteArr(0);
+        	} else {
+        	    frame.flagsOffset = intToByteArr(buffer.length);
+        	}
         	if (tmp < buffer.length){
-        		frame.flagsOffset[1] &= (byte)0xDF;
+        		frame.flagsOffset[1] &= (byte)0xDF; // last fragment, so clear flagsOffset flag
         	}
         	else {
-        		frame.flagsOffset[1] |= (byte)0x20;
+        		frame.flagsOffset[1] |= (byte)0x20; // part of fragment, so set flagsOffset flag
         	}
-        	
+        	System.out.println("Sent Offset = " + byteArrToInt13(frame.flagsOffset)); 
         	frame.body = buffer;
         	
         	Layer3.receiveFromLayer4(frame, destIPAddress, host);
@@ -129,7 +136,7 @@ public class Layer4 {
 			flag = true;
 		}
 		int offset = byteArrToInt13(flagsOffset);
-			
+		System.out.println("Recv Offset = " + offset);	
 		String filename = ipToString(frame.sourceAddr) + ".tmp";
 		
 		if (flag == false && offset == 0){	//Unfragmented Packet
@@ -165,7 +172,7 @@ public class Layer4 {
 		File file = new File(filename);
 		FileOutputStream  out;
 		if (append == false){
-			file.deleteOnExit();
+			//file.deleteOnExit(); not required
 			file.createNewFile();
 			out = new FileOutputStream(file);
 		}else{
@@ -173,6 +180,7 @@ public class Layer4 {
 		}
 		
 		out.write(frame.body);
+	//	System.out.println(Arrays.toString(frame.body));
 		out.close();
 	}
 	
