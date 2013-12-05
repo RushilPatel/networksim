@@ -31,23 +31,23 @@ public class Layer2Frame implements FrameInterface {
         // TODO what should be done in the case where frameByteSequence.length is less that HEADER_N_CRC_SIZE
         
         int i = 0;
-      //Initialise preamble
+      //Initialize preamble
         for(int j = 0; j < PREAMBLE_SIZE_8; i++, j++)
             preamble[j] = frameByteSequence[i];
-      //Initialise destination address
+      //Initialize destination address
         for(int j = 0; j < ADDRESS_SIZE_6; i++, j++)
             destAddr[j] = frameByteSequence[i];
-      //Initialise destination address
+      //Initialize destination address
         for(int j = 0; j < ADDRESS_SIZE_6; i++, j++)
             srcAddr[j] = frameByteSequence[i];
-      //Initialise destination address
+      //Initialize destination address
         for(int j = 0; j < TYPE_SIZE_2; i++, j++) 
             type[j] = frameByteSequence[i];
-      //Initialise body 
+      //Initialize body 
         body = new byte[frameByteSequence.length - CRC_SIZE_4 > 0 ? frameByteSequence.length - CRC_SIZE_4 : 0];
         for(int j = 0; i < frameByteSequence.length - CRC_SIZE_4 && j < body.length; i++, j++)
             body[j] = frameByteSequence[i];
-      //Initialise crc
+        // Initialize crc
         for(int j = 0; j < CRC_SIZE_4; i++, j++)
             crc[j] = frameByteSequence[i];
     }
@@ -100,7 +100,7 @@ public class Layer2Frame implements FrameInterface {
         byte[] byteArr = new byte[HEADER_N_CRC_SIZE + body.length]; 
         
         int i = 0;
-        //Initialise preamble
+        //Initialize preamble
           for(int j = 0; j < preamble.length; i++, j++)
               byteArr[i] = preamble[j];
           for(int j = 0; j < destAddr.length; i++, j++)
@@ -125,7 +125,7 @@ public class Layer2Frame implements FrameInterface {
         byte[] byteArr = new byte[HEADER_N_CRC_SIZE - CRC_SIZE_4 + body.length]; 
         
         int i = 0;
-        //Initialise preamble
+        //Initialize preamble
           for(int j = 0; j < preamble.length; i++, j++)
               byteArr[i] = preamble[j];
           for(int j = 0; j < destAddr.length; i++, j++)
