@@ -1,6 +1,7 @@
 package networksim;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.PriorityQueue;
 
 public class Host implements Runnable{
@@ -14,13 +15,14 @@ public class Host implements Runnable{
     private byte[] macAddress2;
     private byte[] subnetMask2;
     
-    public boolean isRouter = false;
+    public boolean isRouter;
     
     public Host(byte[] ipAddress, byte[] subnetMask, byte [] macAddress, String hostName){
         this.hostName = hostName;
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.subnetMask = subnetMask;
+        this.isRouter = false;
     }
     
     public Host(byte[] ipAddress, byte[] subnetMask, byte [] macAddress, String hostName, byte[] ipAddress2, byte[] subnetMask2, byte [] macAddress2){
@@ -71,31 +73,9 @@ public class Host implements Runnable{
         Layer1.processReceivedPacket (packet, this, queue);
     }
     
-    public void sendFile(byte [] destIPAddress, File fileToSend){
+    public void sendFile(byte [] destIPAddress, File fileToSend) throws IOException{
         Layer4.receiveFromHost (fileToSend, this, destIPAddress);
-        //Layer1.receiveFromLayer2 (destIPAddress, this);
     }
-    
-//    //TODO: Add Support for router to separate networks
-//    public void send (byte[] bytesToSend){
-//        
-//        Packet packetToSend = new Packet (bytesToSend, Packet.getPriorityCounter ());
-//        boolean isClassA = (int)this.getIPAddress ()[0] < 0;
-//        if(isClassA){
-//            Main.classABroadcast.add (packetToSend);
-//        }else{
-//            Main.classCBroadcast.add (packetToSend);
-//        }
-//    }
-//    
-//    public void discardPacket(Packet packet){
-//        boolean isClassA = (int)this.getIPAddress ()[0] < 0;
-//        if(isClassA){
-//            Main.classABroadcast.add (packet);
-//        }else{
-//            Main.classCBroadcast.add (packet);
-//        }
-//    }
 
     @Override
     public synchronized void run () {
