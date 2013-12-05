@@ -48,7 +48,7 @@ public class Main {
         transferring = true;
         new Thread (new Runnable() {
             public void run () {
-                hostA.sendFile (hostC.getIPAddress (), new File ("Atlas.mp3"));         
+                hostA.sendFile (hostC.getIPAddress (), new File ("/home/meha/Desktop/router-config"));         
                 transferring = false;
             }
         }).start ();
