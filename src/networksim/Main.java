@@ -53,7 +53,7 @@ public class Main {
         Thread routerThread = new Thread (router, "Thread R");
         Thread hostBThread = new Thread (hostB, "Thread B");
         Thread hostCThread = new Thread (hostC, "Thread C"); 
-        final File filetoSend = new File ("C:\\Users\\rpatel2\\Documents\\Project\\networksim\\1.pptx");
+        final File filetoSend = new File ("/home/meha/Downloads/1.pptx");
         transferring.set(true);
         new Thread (new Runnable() {
             public void run () {
@@ -77,7 +77,7 @@ public class Main {
         String outputFileCheckSum = checksum ("C:\\Users\\rpatel2\\Documents\\Project\\networksim\\outputfile");
         
         System.out.println ("Match MD5 Result: " + inputFileCheckSum.equals (outputFileCheckSum));
-        System.out.println ("ReadBytes=" + Layer4.readcount + "\t WriteBytes" + Layer4.writecount);
+    
     }
     
     public static String checksum(String datafile) throws NoSuchAlgorithmException, IOException{

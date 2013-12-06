@@ -23,8 +23,7 @@ public class Layer4 {
     public static void receiveFromHost(File fileToSend, Host host, byte [] destIPAddress) throws IOException{
     	sendToLayer3(fileToSend, host, destIPAddress);
 	}
-    public static long readcount = 0;
-    public static long writecount = 0;
+    
     /**
      * This functionality is designed for when a node wants to initiate sending a file, receiving it from the host and sending to an specific destination IP address.
      * 
@@ -66,7 +65,7 @@ public class Layer4 {
                 buffer = new byte [bis.available ()];
             }else{
                 buffer = new byte [sizeOfFiles];
-            }readcount+=tmp;
+            }
         }
         bis.close ();
     }
@@ -94,7 +93,10 @@ public class Layer4 {
     public static int byteArrToInt13(byte[] arr) {
     	int i = arr[1] & 0x1F;
     	i = i << 8;
-    	i |= arr[0];
+    	if(arr[0] < 0)
+    	    i |= 256 + arr[0];
+    	else    
+    	    i |= arr[0];
     	return i;
     }
     /**
@@ -174,7 +176,5 @@ public class Layer4 {
 		}
 		out.write(frame.body);
 		out.close();
-		System.out.println ("Frame.body.write = " + frame.body.length);
-		writecount+=frame.body.length;
 	}	
 }
