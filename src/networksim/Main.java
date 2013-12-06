@@ -1,7 +1,10 @@
 package networksim;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,7 +36,8 @@ public class Main {
     public static BlockingQueue<Packet> classCBroadcast = new PriorityBlockingQueue<Packet> (QUEUE_SIZE_100);
     
     public static AtomicBoolean transferring = new AtomicBoolean(true);
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, NoSuchAlgorithmException, IOException {
+        
                         
         final Host hostA = new Host (hostAIP, hostASubnet, hostAMAC, "HostA");
         final Host router = new Host (routerIP, routerSubnet, routerMAC, "Router", routerIP2, routerSubnet2, routerMAC2);
@@ -48,12 +52,13 @@ public class Main {
         Thread hostAThread = new Thread (hostA, "Thread A");
         Thread routerThread = new Thread (router, "Thread R");
         Thread hostBThread = new Thread (hostB, "Thread B");
-        Thread hostCThread = new Thread (hostC, "Thread C");        
+        Thread hostCThread = new Thread (hostC, "Thread C"); 
+        final File filetoSend = new File ("C:\\Users\\rpatel2\\Documents\\Project\\networksim\\Atlas.mp3");
         transferring.set(true);
-       new Thread (new Runnable() {
+        new Thread (new Runnable() {
             public void run () {
                 try {
-                    hostA.sendFile (hostC.getIPAddress (), new File ("/home/meha/Desktop/Experiments.xlsx"));
+                    hostA.sendFile (hostC.getIPAddress (), filetoSend);
                 } catch (IOException e) {
                     System.out.println ("There was an error parsing the file.");
                 }
@@ -68,5 +73,27 @@ public class Main {
             hostCThread.run ();hostCThread.join();
         }
         System.out.println("Done!");  
+        String inputFileCheckSum = checksum (filetoSend.getAbsolutePath ());
+        String outputFileCheckSum = checksum ("C:\\Users\\rpatel2\\Documents\\Project\\networksim\\outputfile");
+        
+        System.out.println ("Match Checksum Result: " + inputFileCheckSum.equals (outputFileCheckSum));
+    }
+    
+    public static String checksum(String datafile) throws NoSuchAlgorithmException, IOException{
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        FileInputStream fis = new FileInputStream(datafile);
+        byte[] dataBytes = new byte[1024];
+        int nread = 0; 
+        while ((nread = fis.read(dataBytes)) != -1) {
+          md.update(dataBytes, 0, nread);
+        };
+        byte[] mdbytes = md.digest();
+        //convert the bytes to hex format
+        StringBuffer sb = new StringBuffer("");
+        for (int i = 0; i < mdbytes.length; i++) {
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        fis.close ();
+        return sb.toString();
     }
 }

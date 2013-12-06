@@ -11,6 +11,7 @@ public class Host implements Runnable {
     private String hostName;
     private byte[] subnetMask;
 
+    //the following fields only apply to Router
     private byte[] ipAddress2;
     private byte[] macAddress2;
     private byte[] subnetMask2;
@@ -76,6 +77,13 @@ public class Host implements Runnable {
         Layer1.processReceivedPacket(packet, this, queue);
     }
     
+    /**
+     * Sends file to the given destination Host
+     * Also initiates the file transfer
+     * @param destIPAddress
+     * @param fileToSend
+     * @throws IOException
+     */
     public void sendFile(byte [] destIPAddress, File fileToSend) throws IOException{
         Layer4.receiveFromHost (fileToSend, this, destIPAddress);
     }
@@ -93,7 +101,6 @@ public class Host implements Runnable {
                             this.receive(Main.classABroadcast.take(),
                                 Main.classABroadcast);
                         } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }
@@ -104,7 +111,6 @@ public class Host implements Runnable {
                             this.receive(Main.classCBroadcast.take(),
                                 Main.classCBroadcast);
                         } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }
@@ -118,7 +124,6 @@ public class Host implements Runnable {
                                 this.receive(Main.classABroadcast.take(),
                                     Main.classABroadcast);
                             } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
                         }
@@ -130,7 +135,6 @@ public class Host implements Runnable {
                                 this.receive(Main.classCBroadcast.take(),
                                     Main.classCBroadcast);
                             } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
                         }

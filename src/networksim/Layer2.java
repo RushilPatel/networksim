@@ -9,7 +9,6 @@ public class Layer2 {
     
     /***
      * Wrapper class for byte array. The class implements equals and hashCode method for the byte array.
-     * @author meha
      */
     public static class IpAddWrapper  {
         byte[] ip = new byte[6];

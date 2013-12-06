@@ -97,10 +97,10 @@ public class Layer3 {
         // This checks if the packet is meant for this host.
         if (new IpAddWrapper(frame.destinationAddr).equals(new IpAddWrapper(
                 host.getIPAddress()))) {
-            System.out.println("Host: " + host.getHostName()
-                    + " received a packet... ");
+            System.out.printf("%s: layer 3: received frame from layer 2\n", host.getHostName());
             try {
                 Layer4.receiveFromLayer3(frame, host);
+                System.out.printf("%s: layer 3: passing frame to layer 4\n", host.getHostName());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -127,12 +127,11 @@ public class Layer3 {
     public static void receiveFromLayer4(Layer3Frame frame,
             byte[] finalDestination, Host host) {
         // Determine the next hop and then send to layer 2
-        System.out.println("Host: " + host.getHostName()
-                + " received a packet... ");
+        System.out.printf("%s: layer 3: received frame from layer 4\n", host.getHostName());
         byte[] nextHop = getNextHop(finalDestination, host);
         frame.checksum = calculateChecksum(frame.body);
+        System.out.printf("%s: layer 3: passing frame to layer 2\n", host.getHostName());        
         Layer2.recieveFromLayer3(frame, nextHop, host);
-
     }
 
     /**

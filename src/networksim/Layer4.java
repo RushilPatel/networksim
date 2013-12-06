@@ -1,35 +1,29 @@
 package networksim;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Layer4.java: This class simulates the functionalities of the Transport Layer (Layer4). 
  * It basically receives a file from the host, split it to an specific number of chunks, inserts each chunk into a layer3 frame
  * which in fact is an IP packet. Moreover, some IP packet fields are filled at this layer such as Source IP (Host), Destination IP, Flag and Offset.
- *   
- * @author Ebad
  *
  */
 public class Layer4 {
-	//public Layer3 layer3;
-	//public Layer2 layer2;
 	/**
 	 * 
-	 * @param fileToSend a handle to the file that should be sent
-	 * @param host Host address
-	 * @param destIPAddress Destination IP Address
+	 * @param fileToSend - a handle to the file that should be sent
+	 * @param host - Host address
+	 * @param destIPAddress - Destination IP Address
 	 * @throws IOException 
 	 */
     public static void receiveFromHost(File fileToSend, Host host, byte [] destIPAddress) throws IOException{
     	sendToLayer3(fileToSend, host, destIPAddress);
-    	
 	}
+    
     /**
      * This functionality is designed for when a node wants to initiate sending a file, receiving it from the host and sending to an specific destination IP address.
      * 
@@ -43,9 +37,6 @@ public class Layer4 {
     	
     	int chunkSize = 1400 - Layer3Frame.HEADER_SIZE - Layer2Frame.HEADER_N_CRC_SIZE;
     	BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fileToSend));
-        FileOutputStream out;
-        int partCounter = 1;
-        //int sizeOfFiles = 1024;// 1KB
         int sizeOfFiles = chunkSize;
         byte[] buffer = new byte[sizeOfFiles];
         int tmp = 0;
@@ -67,12 +58,16 @@ public class Layer4 {
         	else {
         		frame.flagsOffset[1] |= (byte)0x20; // part of fragment, so set flagsOffset flag
         	}
-        	System.out.println("Sent Offset = " + byteArrToInt13(frame.flagsOffset)); 
         	frame.body = buffer;
-        	
         	Layer3.receiveFromLayer4(frame, destIPAddress, host);
+        	//reinitialize the buffer
+        	if(bis.available () < sizeOfFiles){
+                buffer = new byte [bis.available ()];
+            }else{
+                buffer = new byte [sizeOfFiles];
+            }
         }
-
+        bis.close ();
     }
     /**
      * This function converts integer to byte array.
@@ -136,8 +131,7 @@ public class Layer4 {
 			flag = true;
 		}
 		int offset = byteArrToInt13(flagsOffset);
-		System.out.println("Recv Offset = " + offset);	
-		String filename = ipToString(frame.sourceAddr) + ".tmp";
+		String filename = "outputfile";
 		
 		if (flag == false && offset == 0){	//Unfragmented Packet
 			writeChunkToFile(frame, filename, false);
@@ -172,16 +166,12 @@ public class Layer4 {
 		File file = new File(filename);
 		FileOutputStream  out;
 		if (append == false){
-			//file.deleteOnExit(); not required
 			file.createNewFile();
 			out = new FileOutputStream(file);
 		}else{
 			out = new FileOutputStream(file, true);
 		}
-		
 		out.write(frame.body);
-	//	System.out.println(Arrays.toString(frame.body));
 		out.close();
-	}
-	
+	}	
 }
