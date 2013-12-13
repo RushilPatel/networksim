@@ -14,8 +14,6 @@ public class Layer3 {
     /***
      * Wrapper class for byte array. The class implements equals and hashCode
      * method for the byte array.
-     * 
-     * @author Mehadi
      */
     public static class IpAddWrapper {
         byte[] ip = new byte[6];
@@ -90,17 +88,17 @@ public class Layer3 {
      * @param host
      *            The host that the packet is currently at
      */
-    public static void receiveFromLayer2(Layer3Frame frame, Host host) {
+    public static void receiveFromLayer2(Layer3Packet frame, Host host) {
         // This method will see if the packet is meant for this host or not. If
         // it is, it will send the packet up to layer 4. If not,
         // Layer 3 will attach a next hop and send it back down to layer 2
         // This checks if the packet is meant for this host.
         if (new IpAddWrapper(frame.destinationAddr).equals(new IpAddWrapper(
                 host.getIPAddress()))) {
-            System.out.printf("%s: layer 3: received frame from layer 2\n", host.getHostName());
+            System.out.printf("%s: layer 3: received data from layer 2\n", host.getHostName());
             try {
+                System.out.printf("%s: layer 3: passing data to layer 4\n", host.getHostName());
                 Layer4.receiveFromLayer3(frame, host);
-                System.out.printf("%s: layer 3: passing frame to layer 4\n", host.getHostName());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -124,13 +122,13 @@ public class Layer3 {
      * @param host
      *            The current host (Location)
      */
-    public static void receiveFromLayer4(Layer3Frame frame,
+    public static void receiveFromLayer4(Layer3Packet frame,
             byte[] finalDestination, Host host) {
         // Determine the next hop and then send to layer 2
-        System.out.printf("%s: layer 3: received frame from layer 4\n", host.getHostName());
+        System.out.printf("%s: layer 3: received data from layer 4\n", host.getHostName());
         byte[] nextHop = getNextHop(finalDestination, host);
         frame.checksum = calculateChecksum(frame.body);
-        System.out.printf("%s: layer 3: passing frame to layer 2\n", host.getHostName());        
+        System.out.printf("%s: layer 3: passing data to layer 2\n", host.getHostName());        
         Layer2.recieveFromLayer3(frame, nextHop, host);
     }
 

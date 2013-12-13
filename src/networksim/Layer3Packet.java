@@ -1,6 +1,6 @@
 package networksim;
 
-public class Layer3Frame implements FrameInterface {
+public class Layer3Packet implements FrameInterface {
     // IPv4 Header Field sizes
     // All values are in bytes
     private static final int VERSION_HLEN_SIZE = 1;
@@ -35,7 +35,7 @@ public class Layer3Frame implements FrameInterface {
      * This method serves as the generic constructor so that a Layer 3 Frame can
      * be blankly constructed
      */
-    public Layer3Frame() {
+    public Layer3Packet() {
 
     }
 
@@ -45,7 +45,7 @@ public class Layer3Frame implements FrameInterface {
      * @param frameByteSequence
      *            The information to be transformed into a Layer 3 Frame
      */
-    public Layer3Frame(byte[] frameByteSequence) {
+    public Layer3Packet(byte[] frameByteSequence) {
         this();
 
         int i = 0;

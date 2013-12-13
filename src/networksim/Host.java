@@ -27,6 +27,7 @@ public class Host implements Runnable {
         this.isRouter = false;
     }
 
+    //Constructor for router
     public Host(byte[] ipAddress, byte[] subnetMask, byte[] macAddress,
             String hostName, byte[] ipAddress2, byte[] subnetMask2,
             byte[] macAddress2) {
@@ -41,30 +42,52 @@ public class Host implements Runnable {
         this.isRouter = true;
     }
 
+    /**
+     * @return IP Address of Host
+     */
     public byte[] getIPAddress() {
         return this.ipAddress;
     }
-
+    
+    
+    /**
+     * @return Subnet Mask for host
+     */
     public byte[] getSubnetMask() {
         return this.subnetMask;
     }
 
+    /**
+     * @return MAC address of the host interface
+     */
     public byte[] getMACAddress() {
         return this.macAddress;
     }
 
+    /**
+     * @return Name of the host
+     */
     public String getHostName() {
         return this.hostName;
     }
 
+    /**
+     * @return IP address of the second interface
+     */
     public byte[] getIPAddress2() {
         return this.ipAddress2;
     }
 
+    /**
+     * @return Subnet mask of the second interface
+     */
     public byte[] getSubnetMask2() {
         return this.subnetMask2;
     }
 
+    /**
+     * @return MAC Address of the second interface
+     */
     public byte[] getMACAddress2() {
         return this.macAddress2;
     }
@@ -73,6 +96,10 @@ public class Host implements Runnable {
         return this.hostName;
     }
 
+    /**
+     * @param packet - Data to process
+     * @param queue - queue the packet was removed from
+     */
     public void receive(Packet packet, BlockingQueue<Packet> queue) {
         Layer1.processReceivedPacket(packet, this, queue);
     }
@@ -92,9 +119,33 @@ public class Host implements Runnable {
     @Override
     public synchronized void run() {
 
-//        while(Main.transferring.get() || !Main.classABroadcast.isEmpty() || !Main.classCBroadcast.isEmpty()) causes packet out of order delivery
-        {
-            if (isRouter) {
+        if (isRouter) {
+            //router read from both CLASSA queue and CLASSC queue
+            if (!Main.classABroadcast.isEmpty()) {
+                synchronized(this) {
+                    try {
+                        this.receive(Main.classABroadcast.take(),
+                            Main.classABroadcast);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (!Main.classCBroadcast.isEmpty()) {
+                synchronized(this) {
+                    try {
+                        this.receive(Main.classCBroadcast.take(),
+                            Main.classCBroadcast);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            //if it is a host, then read from the appropriate queue based on Host IP
+            //Meaning, Host with CLASS A IP, only reads from CLASSA queue and so on
+            boolean isClassA = (int) this.getIPAddress()[0] > 0;
+            if (isClassA) {
                 if (!Main.classABroadcast.isEmpty()) {
                     synchronized(this) {
                         try {
@@ -105,6 +156,7 @@ public class Host implements Runnable {
                         }
                     }
                 }
+            } else {
                 if (!Main.classCBroadcast.isEmpty()) {
                     synchronized(this) {
                         try {
@@ -114,32 +166,7 @@ public class Host implements Runnable {
                             e.printStackTrace();
                         }
                     }
-                }
-            } else {
-                boolean isClassA = (int) this.getIPAddress()[0] > 0;
-                if (isClassA) {
-                    if (!Main.classABroadcast.isEmpty()) {
-                        synchronized(this) {
-                            try {
-                                this.receive(Main.classABroadcast.take(),
-                                    Main.classABroadcast);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } else {
-                    if (!Main.classCBroadcast.isEmpty()) {
-                        synchronized(this) {
-                            try {
-                                this.receive(Main.classCBroadcast.take(),
-                                    Main.classCBroadcast);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } 
-                }
+                } 
             }
         }
     }

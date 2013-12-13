@@ -12,22 +12,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Main {
 
     private static final int QUEUE_SIZE_100 = 100;
+    //Host A
     public static byte[] hostAIP = new byte[] {(byte) 10, (byte) 10, (byte) 20, (byte) 1};
     public static byte[] hostASubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] hostAMAC = new byte[] {(byte) 11, (byte) 22, (byte) 33 , (byte) 44, (byte) 55, (byte) 66};
     
+    //Host B
     public static byte[] hostBIP = new byte[] {(byte) 192, (byte) 168, (byte) 25, (byte) 20};
     public static byte[] hostBSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] hostBMAC = new byte[] {(byte) 22, (byte) 33 , (byte) 44, (byte) 55, (byte) 66 , (byte) 77};
-
+    
+    //Host C
     public static byte[] hostCIP = new byte[] {(byte) 192, (byte) 168, (byte) 25, (byte) 15};
     public static byte[] hostCSubnet  = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] hostCMAC = new byte[] {(byte) 33 , (byte) 44, (byte) 55, (byte) 66, (byte) 77, (byte) 88};;
     
+    //first interface of router
     public static byte[] routerIP = new byte[] {(byte) 192, (byte) 168, (byte) 25, (byte) 10};
     public static byte[] routerSubnet = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] routerMAC = new byte[] {(byte) 44, (byte) 55, (byte) 66 , (byte) 77, (byte) 88, (byte) 99};
     
+    //second interface of router
     public static byte[] routerIP2 = new byte[] {(byte) 10, (byte) 10, (byte) 20, (byte) 2};
     public static byte[] routerSubnet2 = new byte[] {(byte) 255, (byte) 255, (byte) 255, (byte) 0};
     public static byte[] routerMAC2 = new byte[] {(byte) 33, (byte) 55, (byte) 66 , (byte) 77, (byte) 88, (byte) 99};
@@ -53,12 +58,21 @@ public class Main {
         Thread routerThread = new Thread (router, "Thread R");
         Thread hostBThread = new Thread (hostB, "Thread B");
         Thread hostCThread = new Thread (hostC, "Thread C"); 
-        final File filetoSend = new File ("/home/meha/Downloads/1.pptx");
+        
+        //Path to the file that needs to be sent
+        String inputFilePath = "C:\\Users\\rpatel2\\Documents\\Project\\networksim\\1.pptx";
+        final File filetoSend = new File (inputFilePath);
+        
+        
         transferring.set(true);
         new Thread (new Runnable() {
             public void run () {
                 try {
+                    
+                    //Host A will send file to Host C
                     hostA.sendFile (hostC.getIPAddress (), filetoSend);
+                    
+                    
                 } catch (IOException e) {
                     System.out.println ("There was an error parsing the file.");
                 }
@@ -74,13 +88,17 @@ public class Main {
         }
         System.out.println("Done!");  
         String inputFileCheckSum = checksum (filetoSend.getAbsolutePath ());
-        String outputFileCheckSum = checksum ("C:\\Users\\rpatel2\\Documents\\Project\\networksim\\outputfile");
+        
+        String outputFileCheckSum = checksum ("outputfile");
         
         System.out.println ("Match MD5 Result: " + inputFileCheckSum.equals (outputFileCheckSum));
     
     }
     
-    public static String checksum(String datafile) throws NoSuchAlgorithmException, IOException{
+    
+    //calculates checksum for given file.
+    //MD5 can be replaced with SHA1
+    private static String checksum(String datafile) throws NoSuchAlgorithmException, IOException{
         MessageDigest md = MessageDigest.getInstance("MD5");
         FileInputStream fis = new FileInputStream(datafile);
         byte[] dataBytes = new byte[1024];

@@ -34,15 +34,15 @@ public class Layer4 {
      * @param tmp is there to check when the reading process should be considered done, where tmp becomes negative.
      */
     public static void sendToLayer3(File fileToSend, Host host, byte [] destIPAddress) throws IOException{
-    	
-    	int chunkSize = 1400 - Layer3Frame.HEADER_SIZE - Layer2Frame.HEADER_N_CRC_SIZE;
+        System.out.printf("%s: layer 4: sent data from layer 3\n", host.getHostName());
+    	int chunkSize = 1400 - Layer3Packet.HEADER_SIZE - Layer2Frame.HEADER_N_CRC_SIZE;
     	BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fileToSend));
         int sizeOfFiles = chunkSize;
         byte[] buffer = new byte[sizeOfFiles];
         int tmp = 0;
         boolean first = true;
         while ((tmp = bis.read(buffer)) > 0) {
-        	Layer3Frame frame = new Layer3Frame();
+        	Layer3Packet frame = new Layer3Packet();
         	frame.sourceAddr = host.getIPAddress();
         	frame.destinationAddr = destIPAddress;
         	
@@ -122,8 +122,8 @@ public class Layer4 {
      * @param host Host Address
      * @throws IOException
      */
-	public static void receiveFromLayer3(Layer3Frame frame, Host host) throws IOException{
-		
+	public static void receiveFromLayer3(Layer3Packet frame, Host host) throws IOException{
+        System.out.printf("%s: layer 4: received data from layer 3\n", host.getHostName());
 		byte[] flagsOffset = frame.flagsOffset;
 		
 		//Convert the Byte array to decimal value
@@ -152,9 +152,7 @@ public class Layer4 {
 			//open the file, and write the last packet (append)
 			writeChunkToFile(frame, filename, true);
 		}
-		
-		
-		//return payload;
+				
 	}
 	/**
 	 * 
@@ -164,7 +162,7 @@ public class Layer4 {
 	 * @throws IOException 
 	 * @throws FileNotFoundException
 	 */
-	private static void writeChunkToFile(Layer3Frame frame, String filename, boolean append)
+	private static void writeChunkToFile(Layer3Packet frame, String filename, boolean append)
 			throws IOException, FileNotFoundException {
 		File file = new File(filename);
 		FileOutputStream  out;

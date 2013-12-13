@@ -58,15 +58,6 @@ public class Layer2 {
         // initialize ARP table
         if(ARPTable == null)
             ARPTable = new HashMap<IpAddWrapper, byte[]>();
-        
- //       byte[] ip1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10};
- //       byte[] ip2 = {(byte) 10, (byte) 10, (byte) 11, (byte) 11};
-        
- //       byte[] mac1 = {(byte) 10, (byte) 10, (byte) 10, (byte) 10, (byte) 10, (byte) 10};
- //       byte[] mac2 = {(byte) 11, (byte) 11, (byte) 11, (byte) 11, (byte) 11, (byte) 11};
-        
-//        ARPTable.put(new IpAddWrapper(ip1), mac1);
-//        ARPTable.put(new IpAddWrapper(ip2), mac2);
             ARPTable.put(new IpAddWrapper(ip), mac);
     }
     
@@ -77,8 +68,8 @@ public class Layer2 {
      * @param nextHopAddress - IP address of the next hop node in the path
      * @param host - current host machine information processing this packet 
      */
-    public static void recieveFromLayer3(Layer3Frame frame, byte[] nextHopAddress, Host host) {
-        System.out.printf("%s: layer 2: received packet(%s) from layer 3\n", host.getHostName(), frame.toString());
+    public static void recieveFromLayer3(Layer3Packet frame, byte[] nextHopAddress, Host host) {
+        System.out.printf("%s: layer 2: received data from layer 3\n", host.getHostName());
         // create a Layer2Frame and add the Layer3Frame as part of the body
         Layer2Frame l2 = new Layer2Frame();
         l2.setBody(frame.toByteArray());
@@ -98,7 +89,7 @@ public class Layer2 {
         l2.calculateAndSetCRC();
         
         // pass the Layer2Frame object to Layer 1
-        System.out.printf("%s: layer 2: passing frame(%s) to layer 1\n", host.getHostName(), l2.toString());
+        System.out.printf("%s: layer 2: passing data to layer 1\n", host.getHostName());
         Layer1.receiveFromLayer2(l2, host, nextHopAddress);
     }
 
@@ -109,7 +100,7 @@ public class Layer2 {
      * @param host - current host machine information processing this packet
      */
     public static void recieveFromLayer1(Layer2Frame frame, Host host) {
-        System.out.printf("%s: layer 2: received packet(%s) from layer 1\n", host.getHostName(), frame.toString());
+        System.out.printf("%s: layer 2: received data from layer 1\n", host.getHostName());
         
         // check crc 
         if(!frame.verifyCRC()) {
@@ -118,10 +109,10 @@ public class Layer2 {
         }
         
         // create a layer 3 frame
-        Layer3Frame l3 = new Layer3Frame(frame.getBody());
+        Layer3Packet l3 = new Layer3Packet(frame.getBody());
         
         // pass layer 3 frame to layer 3
-        System.out.printf("%s: layer 2: passing frame(%s) to layer 3\n", host.getHostName(), l3.toString());
+        System.out.printf("%s: layer 2: passing data to layer 3\n", host.getHostName());
         Layer3.receiveFromLayer2(l3, host);
     }
     
