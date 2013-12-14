@@ -60,6 +60,7 @@ public class Main {
         Thread hostCThread = new Thread (hostC, "Thread C"); 
         
         //Path to the file that needs to be sent
+        //Note: Output file will be created on the root of the project directory. 
         String inputFilePath = "C:\\Users\\rpatel2\\Documents\\Project\\networksim\\1.pptx";
         final File filetoSend = new File (inputFilePath);
         
