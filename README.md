@@ -1,7 +1,7 @@
 # networksim
 
 ##Project Summary:
-Demonstrates the	functionality	of	some	of	the	OSI	layers	in	the	communications	stack.	In	particular, describes some of	the	key	functions	performed	by	layers	2	(Data	Link),	3	(Network)	and	4 (Transport). The	goal	is	to	emulate	a	simple	scenario	where a	file	is	transferred	form	a	source	node	to	a	destination nodes.
+Demonstrates functionality	of	some	of	the	OSI	layers	in	the	communications	stack.	In	particular, describes some of	the	key	functions	performed	by	layers	2	(Data	Link),	3	(Network)	and	4 (Transport). The	goal	is	to	emulate	a	simple	scenario	where a	file	is	transferred	form	a	source	node	to	a	destination nodes.
 
 ##Project	Details:
 Each	node should	be represented	by	a	separate	thread,	all	launched	 by	 the	 main	 application (see diagram).	The	MTU	(or	Maximum	Transmit	Unit)	of	all	links	to	be	the	same,	and	equal	to	1400	Bytes. Each	thread	implements	a	limited	set	of	capabilities for	layers	2,	3	and	4.
